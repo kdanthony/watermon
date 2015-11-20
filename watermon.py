@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python3 -u
 
 # Water Monitor
 #
@@ -24,15 +24,16 @@ hmc5883l.setDeclination(9,54)
 
 # API Key for Grovestreams (should have write and auto create permissions)
 grovestreams_apikey = 'XXXXXXXXXXXXXX'
+# Write API Key for Thingspeak
+thingspeak_apikey = 'XXXXXXXXXXXXXX';
 
 # Name of component at Grovestreams
 component_id = "Water"
 
-base_url = '/api/feed?'
-conn = http.client.HTTPConnection('www.grovestreams.com')
+grovestreambase_url = '/api/feed?'
 
 # How often to publish
-publish_delay = 60
+publish_delay = 300
 # Amount of water per count
 liter_per_count = 0.017
 
@@ -59,12 +60,13 @@ while True:
         liters = crossings * liter_per_count
         print("Count: {} Liters: {}".format(crossings,liters))
         try:
-            url = base_url + urllib.parse.urlencode({'compId' : component_id,
+            url = grovestreambase_url + urllib.parse.urlencode({'compId' : component_id,
                                'liters' : liters})
             headers = {"Connection" : "close", "Content-type": "application/json",
                    "Cookie" : "api_key="+grovestreams_apikey}
 
-            print('Uploading feed to: ' + url)
+            print('Uploading grovestream feed to: ' + url)
+            conn = http.client.HTTPConnection('www.grovestreams.com')
             conn.request("PUT", url, "", headers)
             response = conn.getresponse()
             status = response.status
@@ -84,5 +86,33 @@ while True:
             if conn != None:
                 conn.close()
 
+        try:
+            params = urllib.parse.urlencode({'field1': liters, 'key': thingspeak_apikey})
+            headers = {"Content-type": "application/x-www-form-urlencoded","Accept": "text/plain"}
+
+            print('Uploading to thingspeak: ' + params )
+            conn = http.client.HTTPConnection('api.thingspeak.com')
+            conn.request("POST", '/update', params, headers)
+            response = conn.getresponse()
+            status = response.status
+            if status != 200 and status != 201:
+                                try:
+                                        if (response.reason != None):
+                                                print('HTTP Failure Reason: ' + response.reason + ' body: ' + response.read())
+                                        else:
+                                                print('HTTP Failure Body: ' + response.read())
+                                except Exception:
+                                        print('HTTP Failure Status: %d' % (status) )
+
+        except Exception as e:
+            print('HTTP Failure: ' + str(e))
+
+        finally:
+            if conn != None:
+                conn.close()
+
+
         crossings = 0
         last_publish = now
+
+
