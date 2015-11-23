@@ -5,6 +5,9 @@
 # Reads a HMC5883L sensor to detect a magnet spinning inside a water meter.
 # Reverses to field strength on the y axis are counted to detect water is flowing.
 # Liters in a period are uploaded to grovestreams for graphing.
+# 
+# Derived from http://seductiveequations.com/2015/11/09/water-meter.html and
+# ported to python from wiring.
 
 import time
 import datetime

@@ -13,4 +13,4 @@ Wiring:
 | SDA          | 3                |
 | SCL          | 5                |
 
-
+Derived from http://seductiveequations.com/2015/11/09/water-meter.html and ported to python (thanks!).
