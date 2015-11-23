@@ -13,4 +13,6 @@ Wiring:
 | SDA          | 3                |
 | SCL          | 5                |
 
+Requires the Think Bowl i2c libraries for python http://think-bowl.com/raspberry-pi/installing-the-think-bowl-i2c-libraries-for-python/ or https://github.com/quick2wire/quick2wire-python-api.git
+
 Derived from http://seductiveequations.com/2015/11/09/water-meter.html and ported to python (thanks!).
