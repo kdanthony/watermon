@@ -27,7 +27,7 @@ hmc5883l.setContinuousMode()
 hmc5883l.setDeclination(9,54)
 
 # API Key for Grovestreams (should have write and auto create permissions)
-grovestreams_apikey = '93f5a58b-42d4-3a94-afd6-f1f7586d2c2d'
+grovestreams_apikey = 'XXXXXXXXXXXXXX'
 # Write API Key for Thingspeak
 thingspeak_apikey = 'XXXXXXXXXXXXXX'
 # Access Key for Initial State
